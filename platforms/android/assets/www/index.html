@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="jqueryMobile/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="css/stockStyle.css">
+<link rel="stylesheet" href="css/jquery-ui.css">
+<script src="js/jquery-2.1.1.min.js"></script>
+<script src="js/jquery-ui.js"></script>
+<script src="jqueryMobile/jquery.mobile-1.4.5.min.js"></script>
+<script src="cordova.js"></script>
+<script src="js/symbols.js"></script>
+<script src="js/trade.js"></script>
+<script src="js/reports.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/transfer.js"></script>
+<script src="js/stockmodel.js"></script>
+<script src="js/stockcontroller.js"></script>
+<title>Personal Stock</title>
+</head>
+<body>
+
+<div data-role="page" id="pageone">
+    <div data-role="header">
+        <h1>Welcome To Personal Stock</h1>
+    </div>
+    <div data-role="main" class="ui-content">
+        <span class="required"></span>
+        <form id="signin">
+        Username: <input id="user" type="text" name="username" required/>
+        Password: <input id="pwd" type="password" name="password" required/>
+        <a href="#account" id="login" data-role="button">Submit</a>
+        </form>
+        <br><hr>
+         Don't have an account? <a href="#createaccount" class="ui-btn">Sign Up</a>
+    </div>
+</div>
+<div data-role="page" data-dialog="true" id="createaccount">
+    <div data-role="header">
+      <h1>Create your account</h1>
+    </div>
+    <div data-role="main" class="ui-content">
+        <span class="required"></span>
+        <form id="signup">
+            Username: <input id="username" type="text" name="username" required/>
+            Password: <input id="passwd" type="password" name="password" required/>
+            Confirm Password: <input id="repasswd" type="password" name="repassword" required/>
+            <a id="next1" href="#depositPage" class="ui-btn">Next</a>
+        </form>
+    </div>
+</div>
+<div data-role="page" data-dialog="true" id="depositPage">
+    <div data-role="header">
+      <h1>Deposit Money</h1>
+    </div>
+    <form id="moneydeposit">
+    <div data-role="main" class="ui-content">
+        <span class="required"></span>
+        <p>* Need to deposit atleast $100 initially to open an account. Monthly you need to 
+        deposit $50, otherwise account will be closed.</p>
+            <table width="100%">
+                <tr><td>Bank</td><td>
+                        <select id="moneydepositaccountbank">
+                            <option>Bank of America</option>
+                            <option>Wells Fargo</option>
+                        </select></td></tr>
+                <tr><td>Account No</td><td><input type="text" id="moneydepositaccountno"/></td></tr>
+                <tr><td>Deposit Amount</td><td><input id="deposit" type="text" name="deposit" required/></td></tr>
+            </table>
+    </div>
+    <div data-role="header">
+      <h1>Photo</h1>
+      <a id="signupchangephoto" href="javascript:void(0)" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-gear">Change</a>
+      <p><img id="signupphoto" width="200"></p>
+    </div>
+    <div data-role="main" class="ui-content">
+    </div>
+    <a id="next2" href="#confirmPage" class="ui-btn">Next</a>
+    </form>
+</div>
+<div data-role="page" data-dialog="true" id="confirmPage">
+    <div data-role="header">
+      <h1>Confirmation</h1>
+    </div>
+    <div id="confirminfo" data-role="main" class="ui-content">
+        <span class="required"></span>
+    </div>
+    <a href="#pageone" id="confirm" data-role="button">Back to Home Page</a>
+</div>
+<div data-role="page"  id="account">
+    <div data-role="header">
+        <div data-role="navbar">
+          <ul class="menu">
+            <li><a class="ui-btn-icon-left ui-icon-home" href="#account">Account</a></li>
+            <li><a class="ui-btn-icon-left ui-icon-action" href="#trade">Trade</a></li>
+            <li><a class="ui-btn-icon-left ui-icon-bars" href="#reports">Reports</a></li>
+            <li><a href="#settings" class="ui-btn-icon-left ui-icon-user">Settings</a></li>
+            <li><a href="#signout" class="ui-btn-icon-left ui-icon-delete">Sign Out</a></li>
+          </ul>
+        </div>
+    </div>
+    <div class="ui-content" data-role="main">
+        <h3>Summary</h3>
+        <ul data-role="listview" data-inset="true">
+            <li>
+                <table width="100%"><tr>
+                    <td><h4>Total Accounts Value</h4>
+                        <p>Total cash plus current <br/>market value of all stocks</p></td>
+                    <td align="right"><h1 id="account_total"></h1></td>
+                </tr></table>
+            </li>
+            <li>
+                <table width="100%"><tr>
+                    <td><h4>Total Cash</h4>
+                        <p>Total liquid cash</p></td>
+                    <td><a href="#transfer" class="ui-btn">Transfer</a></td>
+                    <td align="right"><h1 id="account_cash"></h1></td>
+                </tr></table>
+            </li>
+            <li>
+                <table width="100%"><tr>
+                    <td><h4>Total Stocks Value</h4>
+                        <p>Current Market value of <br/>all purchased stocks</p></td>
+                    <td align="right"><h1 id="account_total_stock"></h1></td>
+                </tr></table>
+            </li>
+        </ul>
+        <hr>
+        <h3>Purchased Stocks</h3>
+        <ul id="account_stocks" data-role="listview" data-inset="true">
+        </ul>
+    </div>
+</div>
+<div data-role="page" id="trade">
+    <div data-role="header">
+        <div data-role="navbar">
+          <ul class="menu">
+            <li><a class="ui-btn-icon-left ui-icon-home" href="#account">Account</a></li>
+            <li><a class="ui-btn-icon-left ui-icon-action" href="#trade">Trade</a></li>
+            <li><a class="ui-btn-icon-left ui-icon-bars" href="#reports">Reports</a></li>
+            <li><a href="#settings" class="ui-btn-icon-left ui-icon-user">Settings</a></li>
+            <li><a href="#signout" class="ui-btn-icon-left ui-icon-delete">Sign Out</a></li>
+          </ul>
+        </div>
+    </div>
+    <div class="ui-content" data-role="main">
+        <h2>Buy Stocks</h2>
+        <form><table width="100%"><tr><td>
+        <input id="buysymboltext" data-filter-reveal="true" data-filter-placeholder="Type a symbol" data-clear-btn="true"></td>
+        <td><input id = "buysymbolbutton" type="submit" value="Buy"/></td></tr></table></form>
+        <ul id="buysymbolstocks" data-role="listview" data-filter-reveal="true" data-inset="true" data-filter="true" data-input="#buysymboltext"></ul>
+
+        <h2>Your current Stocks</h2>
+        <form><input data-type="search" id="filterBasic-input"></form>
+        <ul id="trade_stocks" data-role="listview" data-inset="true" data-filter="true" data-input="#filterBasic-input"></ul>
+    </div>
+</div>
+<div data-role="page" id="reports">
+    <div data-role="header">
+        <div data-role="navbar">
+          <ul class="menu">
+            <li><a class="ui-btn-icon-left ui-icon-home" href="#account">Account</a></li>
+            <li><a class="ui-btn-icon-left ui-icon-action" href="#trade">Trade</a></li>
+            <li><a class="ui-btn-icon-left ui-icon-bars" href="#reports">Reports</a></li>
+            <li><a href="#settings" class="ui-btn-icon-left ui-icon-user">Settings</a></li>
+            <li><a href="#signout" class="ui-btn-icon-left ui-icon-delete">Sign Out</a></li>
+          </ul>
+        </div>
+    </div>
+    <div class="ui-content" data-role="main">
+        <form>
+            <h3>Balance Statement</h3>
+            <table width="100%">
+                <tr><td>Start Date</td><td><input id="reportstartdate" type="text"></td></tr>
+                <tr><td>End Date</td><td><input id="reportenddate" type="text"></td></tr>
+            </table>
+            <table width="100%" id="reportlist">
+            </table>
+        </form>
+    </div>
+</div>
+<div data-role="page" id="settings">
+    <div data-role="header">
+        <div data-role="navbar">
+          <ul class="menu">
+            <li><a class="ui-btn-icon-left ui-icon-home" href="#account">Account</a></li>
+            <li><a class="ui-btn-icon-left ui-icon-action" href="#trade">Trade</a></li>
+            <li><a class="ui-btn-icon-left ui-icon-bars" href="#reports">Reports</a></li>
+            <li><a href="#settings" class="ui-btn-icon-left ui-icon-user">Settings</a></li>
+            <li><a href="#signout" class="ui-btn-icon-left ui-icon-delete">Sign Out</a></li>
+          </ul>
+        </div>
+    </div>
+    <div class="ui-content" data-role="main">
+        <div data-role="header"><h3>Personal Information</h3></div>
+        <table width="100%"><tr><td>Username</td><td id="settingsusername"></td></tr></table>
+        <div data-role="header"><h3>Photo</h3>
+        <a id="settingschangephoto" href="#settings" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-gear">Change</a></div>
+        <img id="settingsphoto" width="200"/>
+        <div data-role="header"><h3>Accounts</h3>
+        <a id="settingsaddaccount" href="#formaccount" class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-plus">Add</a></div>
+        <ul id="settingsaccountlist"></ul>
+    </div>
+</div>
+<div data-role="page" id="signout">
+    <div data-role="header">
+        <div data-role="navbar">
+          <ul class="menu">
+            <li><a class="ui-btn-icon-left ui-icon-home" href="#account">Account</a></li>
+            <li><a class="ui-btn-icon-left ui-icon-action" href="#trade">Trade</a></li>
+            <li><a class="ui-btn-icon-left ui-icon-bars" href="#reports">Reports</a></li>
+            <li><a href="#settings" class="ui-btn-icon-left ui-icon-user">Settings</a></li>
+            <li><a href="#signout" class="ui-btn-icon-left ui-icon-delete">Sign Out</a></li>
+          </ul>
+        </div>
+    </div>
+    <div class="ui-content" data-role="main">
+        You will be signed out
+    </div>
+</div>
+
+<div data-role="page" id="formbuy">
+    <div data-role="header">
+        <a href="#trade" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-back ui-btn-icon-notext"></a>
+        <h3>Buy Stock</h3>
+    </div>
+    <form>
+        <div class="ui-content" data-role="main">
+            <table width="100%">
+                <tr><td>Symbol</td><td id="formbuysymbol"></td></tr>
+                <tr><td>Name</td><td id="formbuyname"></td></tr>
+                <tr><td>Price per stock</td><td id="formbuyprice"></td></tr>
+                <tr><td>Total Cash Available</td><td id="formbuycashavail"></td></tr>
+                <tr><td colspan="2"><hr></td>
+                <tr><td>No of Stocks to buy</td><td>
+                    <input id="formbuyslider" data-highlight="true" min="0" max="0" type="range">
+                </td></tr>
+                <tr><td>Cash to be spent</td><td id="formbuycashspend"></td></tr>
+                <tr><td>Remaining Cash after buying</td><td id="formbuycashremain"></td></tr>
+            </table>
+            <a href="javascript:void(0)" id="formbuysubmit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Buy</a>
+        </div>
+    </form>
+</div>
+<div data-role="page" id="formsell">
+    <div data-role="header">
+        <a href="#trade" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-back ui-btn-icon-notext"></a>
+        <h3>Sell Stock</h3>
+    </div>
+    <form>
+        <div class="ui-content" data-role="main">
+            <table width="100%">
+                <tr><td>Symbol</td><td id="formsellsymbol"></td></tr>
+                <tr><td>Name</td><td id="formsellname"></td></tr>
+                <tr><td>Price per stock</td><td id="formsellprice"></td></tr>
+                <tr><td colspan="2"><hr></td>
+                <tr><td>No of Stocks to sell</td><td>
+                    <input id="formsellslider" data-highlight="true" min="0" max="0" type="range">
+                </td></tr>
+                <tr><td>Total Cash for this sale</td><td id="formsellcashtotal"></td></tr>
+            </table>
+            <a href="javascript:void(0)" id="formsellsubmit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">sell</a>
+        </div>
+    </form>
+</div>
+<div data-role="page" id="formaccount">
+    <div data-role="header">
+        <a href="#settings" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-back ui-btn-icon-notext"></a>
+        <h3>Add Account</h3>
+    </div>
+    <form>
+        <div class="ui-content" data-role="main">
+            <table width="100%">
+                <tr><td>Bank</td><td>
+                        <select id="formaccountbank">
+                            <option>Bank of America</option>
+                            <option>Wells Fargo</option>
+                        </select></td></tr>
+                <tr><td>Account No</td><td><input type="text" id="formaccountno"/></td></tr>
+            </table>
+            <a href="javascript:void(0)" id="formaccountsubmit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Create</a>
+        </div>
+    </form>
+</div>
+<div data-role="page" id="transfer">
+    <div data-role="header">
+        <a href="#account" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-back ui-btn-icon-notext"></a>
+        <h3>Transfer</h3>
+    </div>
+    <form>
+        <div class="ui-content" data-role="main">
+            <p class="required"></p>
+            Mode<br/>
+            <select id="transfermode">
+                <option>From Bank Account to Stock Account</option>
+                <option>From Stock Account To Bank Account</option>
+            </select>
+            Account<br/>
+            <select id="transferaccno" data-role="select">
+            </select>
+            Amount<br/>
+            <input type="text" id="transferamount"/>
+            <a href="javascript:void(0)" id="transfersubmit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Transfer</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
